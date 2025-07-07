@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+sqlalchemy
+pymysql
+cryptography
+httpx
+python-dotenv
+pydantic
+fast-alpr[onnx]
