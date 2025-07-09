@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 # 1. /serverRequestsOpening()
 class ServerRequestsOpeningIn(BaseModel):
-    user_id: int
+    username: str
 class ServerRequestsOpeningOut(BaseModel):
     open: bool
     plate: str = None

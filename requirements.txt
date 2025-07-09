@@ -8,3 +8,5 @@ httpx
 python-dotenv
 pydantic
 fast-alpr[onnx]
+zeroconf
+requests

@@ -1,6 +1,6 @@
 # Inputs and Outputs from Database
 
-'''
+"""
 VERDE
 0. Edge Node -> Server: copyUsers() || Ariana y Julio
 NEGRO
@@ -14,4 +14,10 @@ RED
 3. ESP32 Exit -> Edge Node: requestOpening() || Luis y Julio
 AZUL
 4. ESP32 Screen -> Edge Node: getQR() || Lucero y Julio
-'''
+"""
+
+from pydantic import BaseModel
+
+
+class CreateIdentityCommand(BaseModel):
+    id: int

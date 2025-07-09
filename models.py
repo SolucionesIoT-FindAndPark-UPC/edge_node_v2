@@ -8,7 +8,7 @@ class User(Base):
     __tablename__ = "users"
     # 2. Attributes
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
+    username = Column(String(64), unique=True, index=True)
     role = Column(String(32), nullable=False)
     # 3. Relationships
     license_plates = relationship("LicensePlate", back_populates="user")
@@ -25,6 +25,5 @@ class LicensePlate(Base):
 
 class Identity(Base):
     __tablename__ = "identity"
-    id = Column(Integer, primary_key=True, index=True)
-    code = Column(String(128), unique=True, index=True)
+    id = Column(Integer, primary_key=True)
 

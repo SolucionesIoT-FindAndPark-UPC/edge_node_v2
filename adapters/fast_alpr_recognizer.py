@@ -14,3 +14,6 @@ class FastAlprRecognizer(LicensePlateRecognizer):
         if results:
             return results[0].ocr.text
         return ""
+
+if __name__ == "__main__":
+    fast = FastAlprRecognizer()

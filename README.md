@@ -34,8 +34,8 @@ pip install -r requirements.txt
 python configuration.py
 ```
 
-## 7. Correr servidor
+## 7. Correr servidor (SOLO VA A FUNCIONAR ASÍ)
 
 ```
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000
 ```
