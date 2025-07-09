@@ -1,8 +1,10 @@
-from fastapi import FastAPI, UploadFile, File, Depends, HTTPException
+from fastapi import FastAPI, UploadFile, File, Depends, HTTPException, BackgroundTasks
 import httpx
 from sqlalchemy.orm import Session
 import os
 import tempfile
+import time
+
 
 from adapters.esp32_servers_service import Esp32ServersService
 from adapters.fast_alpr_recognizer import FastAlprRecognizer
@@ -20,6 +22,16 @@ from zeroconf import Zeroconf, ServiceInfo
 
 zeroconf: Zeroconf | None = None
 info: ServiceInfo | None = None
+
+def delayed_close():
+    import time
+    time.sleep(10)
+    esp32_servers_service.close_entry()
+
+def delayed_close_two():
+    import time
+    time.sleep(10)
+    esp32_servers_service.close_exit()
 
 def register_mdns_service(local_ip, port):
     global zeroconf, info
@@ -117,19 +129,15 @@ async def root():
     local_ip = ip_recollector.get_local_ip()
     return {"ip": ip, "port": EDGE_NODE_PORT, "local_ip": local_ip}
 # 6. 1/3 Endpoint: miniClientRequestOpening() for ESP32 Exit
-@app.post("/miniClientRequestsOpening")
-async def mini_client_requests_opening(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    # 6.1. Save/upload file, run OCR
-    # 6.2. Lookup plate in LicensePlate table
-    # 6.3.
-    pass
+@app.post("/let_someone_leave")
+async def mini_client_requests_opening(background_tasks: BackgroundTasks):
+    esp32_servers_service.open_exit()
+    background_tasks.add_task(delayed_close)
 # 7. 2/3 Endpoint: letSomeoneEnter() for Server
-@app.post("/let_someone_enter")
-async def let_someone_enter(
-        req: ServerRequestsOpeningIn,
-):
+@app.get("/let_someone_enter")
+async def let_someone_enter(background_tasks: BackgroundTasks):
     esp32_servers_service.open_entry()
-
+    background_tasks.add_task(delayed_close_two)
 # 8. 3/3 Endpoint: getIdentity() for ESP32 Screen
 @app.get("/getIdentity")
 async def get_identity():
